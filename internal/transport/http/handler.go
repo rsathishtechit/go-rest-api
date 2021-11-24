@@ -8,7 +8,14 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("Error loading .env file")
+	}
+}
 
 //Handler - stores pointer to our comments service
 type Handler struct{
@@ -60,8 +67,8 @@ func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	comment, err := h.Service.GetComment(uint(i))
-	if err !=nil {
-		sendErrorResponse(w, "Error retrievin comment by ID", err)
+	if err != nil {
+		sendErrorResponse(w, "Error retrieving comment by ID", err)
 		return
 	}
 	if err := sendOkResponse(w, comment); err != nil {
@@ -142,7 +149,7 @@ func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	if err = sendOkResponse(w, Response{Message: "Successfully deelted"}); err != nil {
+	if err = sendOkResponse(w, Response{Message: "Successfully deleted"}); err != nil {
 		panic(err)
 	}
 	
